@@ -22,7 +22,16 @@ async function createCar(model: string, licensePlate: string, year: number, colo
     throw conflictError(`Car with license plate ${licensePlate} already registered.`)
   }
 
-  await carRepository.createCar(model, licensePlate, year, color);
+  await carRepository.createCar(model, licensePlate, year.toString(), color);
+}
+
+async function updateCar(model: string, licensePlate: string, year: number, color: string, id: string) {
+  const car = await carRepository.getCarWithLicensePlateAndId(licensePlate, Number(id));
+  if (car) {
+    throw conflictError(`Car with license plate ${licensePlate} already registered.`)
+  }
+
+  await carRepository.updateCar(model, licensePlate, year.toString(), color, Number(id));
 }
 
 async function deleteCar(id: number) {
@@ -34,7 +43,8 @@ const carService = {
   getCars,
   getCar,
   createCar,
-  deleteCar
+  deleteCar,
+  updateCar
 }
 
 export default carService;
